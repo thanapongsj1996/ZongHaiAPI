@@ -8,6 +8,7 @@ import (
 	"zonghai-api/migrations"
 	"zonghai-api/routes"
 
+	"github.com/gin-contrib/cors"
 	"github.com/joho/godotenv"
 )
 
@@ -24,8 +25,13 @@ func main() {
 
 	migrations.Migrate()
 
-	r := gin.Default()
-	routes.Serve(r)
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AddAllowHeaders("Authorization")
 
+	r := gin.Default()
+	r.Use(cors.New(corsConfig))
+
+	routes.Serve(r)
 	r.Run(":" + os.Getenv("PORT"))
 }
