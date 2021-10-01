@@ -19,6 +19,7 @@ func Serve(r *gin.Engine) {
 	{
 		jobsGroup.GET("/customer-requests", customerController.FindAllCustomerRequests)
 		jobsGroup.POST("/customer-requests", customerController.CreateCustomerRequest)
+		jobsGroup.DELETE("/customer-requests/all", customerController.ClearCustomerRequest)
 	}
 
 }

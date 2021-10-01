@@ -73,3 +73,15 @@ func (c *Customer) CreateCustomerRequest(ctx *gin.Context) {
 	response := models.SuccessResponse(jsonResponse)
 	ctx.JSON(http.StatusCreated, response)
 }
+
+func (c *Customer) ClearCustomerRequest(ctx *gin.Context) {
+	var jsonResponse models.JSONResponse
+
+	if err := c.DB.Exec("TRUNCATE customer_requests").Error; err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+	}
+
+	response := models.SuccessResponse(jsonResponse)
+	ctx.JSON(http.StatusOK, response)
+}
