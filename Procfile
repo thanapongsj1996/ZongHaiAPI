@@ -1,1 +1,1 @@
-web: bin/go-fast-project
+web: bin/zonghai-api
