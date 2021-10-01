@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	if os.Getenv("GIN_MODE") != "release" {
+	if os.Getenv("APP_EMV") != "production" {
 		err := godotenv.Load()
 		if err != nil {
 			log.Fatal("Error loading .env file")
