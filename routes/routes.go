@@ -23,6 +23,7 @@ func Serve(r *gin.Engine) {
 		authGroup.POST("/driver/sign-up", authController.DriverSignUp)
 		authGroup.POST("/driver/sign-in", middleware.Authenticate().LoginHandler)
 		authGroup.GET("/driver/profile", authenticate, authController.GetDriverProfile)
+		authGroup.PATCH("/driver/profile", authenticate, authController.DriverUpdateProfile)
 	}
 
 	customerController := controllers.Customer{DB: db}

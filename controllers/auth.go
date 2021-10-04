@@ -40,6 +40,20 @@ type driverProfile struct {
 	IsActive         bool   `json:"isActive"`
 }
 
+type driverUpdateProfileForm struct {
+	FirstName  string `form:"firstName"`
+	LastName   string `form:"lastName"`
+	Address    string `form:"address"`
+	ProfileImg string `form:"profileImg"`
+}
+
+type driverUpdateProfileResponse struct {
+	FirstName  string `json:"firstName"`
+	LastName   string `json:"lastName"`
+	Address    string `json:"address"`
+	ProfileImg string `json:"profileImg"`
+}
+
 func (a *Auth) GetDriverProfile(ctx *gin.Context) {
 	var jsonResponse models.JSONResponse
 	sub, _ := ctx.Get("sub")
@@ -57,7 +71,8 @@ func (a *Auth) DriverSignUp(ctx *gin.Context) {
 	var jsonResponse models.JSONResponse
 	var form driverAuthForm
 	if err := ctx.ShouldBindJSON(&form); err != nil {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
 		return
 	}
 
@@ -77,4 +92,29 @@ func (a *Auth) DriverSignUp(ctx *gin.Context) {
 	jsonResponse.Data = serializedUser
 	response := models.SuccessResponse(jsonResponse)
 	ctx.JSON(http.StatusCreated, response)
+}
+
+func (a *Auth) DriverUpdateProfile(ctx *gin.Context) {
+	var jsonResponse models.JSONResponse
+	var form driverUpdateProfileForm
+	if err := ctx.ShouldBind(&form); err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+	}
+
+	sub, _ := ctx.Get("sub")
+	driver := sub.(*models.Driver)
+	copier.Copy(&driver, &form)
+
+	if err := a.DB.Model(driver).Updates(driver).Error; err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+	}
+
+	var serializedDriver driverUpdateProfileResponse
+	copier.Copy(&serializedDriver, driver)
+
+	jsonResponse.Data = serializedDriver
+	response := models.SuccessResponse(jsonResponse)
+	ctx.JSON(http.StatusOK, response)
 }
