@@ -2,9 +2,11 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"zonghai-api/config"
 	"zonghai-api/controllers"
 	"zonghai-api/middleware"
+	"zonghai-api/models"
 )
 
 func Serve(r *gin.Engine) {
@@ -12,7 +14,9 @@ func Serve(r *gin.Engine) {
 	v1 := r.Group("/api/v1")
 
 	v1.GET("/health-check", func(ctx *gin.Context) {
-		ctx.Status(200)
+		var jsonResponse models.JSONResponse
+		response := models.SuccessResponse(jsonResponse)
+		ctx.JSON(http.StatusOK, response)
 	})
 
 	authenticate := middleware.Authenticate().MiddlewareFunc()
@@ -27,11 +31,16 @@ func Serve(r *gin.Engine) {
 	}
 
 	customerController := controllers.Customer{DB: db}
+	driverController := controllers.Driver{DB: db}
 	jobsGroup := v1.Group("jobs")
 	{
-		jobsGroup.GET("/customer-requests", customerController.FindAllCustomerRequests)
-		jobsGroup.POST("/customer-requests", customerController.CreateCustomerRequest)
-		jobsGroup.DELETE("/customer-requests/all", customerController.ClearCustomerRequest)
+		// Customer Request Endpoints
+		jobsGroup.GET("/customer", customerController.FindAllCustomerRequests)
+		jobsGroup.POST("/customer", customerController.CreateCustomerRequest)
+
+		// Driver Request Endpoints
+		jobsGroup.GET("/driver", driverController.FindAllDriverRequests)
+		jobsGroup.POST("/driver", driverController.CreateDriverRequest)
 	}
 
 }

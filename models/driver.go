@@ -7,7 +7,7 @@ import (
 
 type Driver struct {
 	gorm.Model
-	Uuid             string `gorm:"unique_index; primaryKey"`
+	Uuid             string `gorm:"unique_index;"`
 	Phone            string `gorm:"unique; not null"`
 	Password         string `gorm:"not null"`
 	FirstName        string `gorm:"not null"`

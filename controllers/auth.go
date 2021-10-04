@@ -59,10 +59,10 @@ func (a *Auth) GetDriverProfile(ctx *gin.Context) {
 	sub, _ := ctx.Get("sub")
 	driver := sub.(*models.Driver)
 
-	var serializedDriver driverProfile
-	copier.Copy(&serializedDriver, driver)
+	var serializedResponse driverProfile
+	copier.Copy(&serializedResponse, driver)
 
-	jsonResponse.Data = serializedDriver
+	jsonResponse.Data = serializedResponse
 	response := models.SuccessResponse(jsonResponse)
 	ctx.JSON(http.StatusOK, response)
 }
@@ -86,10 +86,10 @@ func (a *Auth) DriverSignUp(ctx *gin.Context) {
 		return
 	}
 
-	var serializedUser driverAuthResponse
-	copier.Copy(&serializedUser, &driver)
+	var serializedResponse driverAuthResponse
+	copier.Copy(&serializedResponse, &driver)
 
-	jsonResponse.Data = serializedUser
+	jsonResponse.Data = serializedResponse
 	response := models.SuccessResponse(jsonResponse)
 	ctx.JSON(http.StatusCreated, response)
 }
@@ -111,10 +111,10 @@ func (a *Auth) DriverUpdateProfile(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
 	}
 
-	var serializedDriver driverUpdateProfileResponse
-	copier.Copy(&serializedDriver, driver)
+	var serializedResponse driverUpdateProfileResponse
+	copier.Copy(&serializedResponse, driver)
 
-	jsonResponse.Data = serializedDriver
+	jsonResponse.Data = serializedResponse
 	response := models.SuccessResponse(jsonResponse)
 	ctx.JSON(http.StatusOK, response)
 }

@@ -14,6 +14,7 @@ func Migrate() {
 		[]*gormigrate.Migration{
 			m1632663073CreateCustomerRequestTable(),
 			m1633342866CreateDriverTable(),
+			m1633374146CreateDriverRequestTable(),
 		},
 	)
 

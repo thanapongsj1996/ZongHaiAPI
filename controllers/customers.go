@@ -40,10 +40,10 @@ func (c *Customer) FindAllCustomerRequests(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
 	}
 
-	var serializedArticles []customerRequestResponse
-	copier.Copy(&serializedArticles, &customerRequests)
+	var serializedResponse []customerRequestResponse
+	copier.Copy(&serializedResponse, &customerRequests)
 
-	jsonResponse.Data = serializedArticles
+	jsonResponse.Data = serializedResponse
 	response := models.SuccessResponse(jsonResponse)
 	ctx.JSON(http.StatusOK, response)
 }
@@ -66,22 +66,10 @@ func (c *Customer) CreateCustomerRequest(ctx *gin.Context) {
 		return
 	}
 
-	var serializedArticles customerRequestResponse
-	copier.Copy(&serializedArticles, &customerRequest)
+	var serializedResponse customerRequestResponse
+	copier.Copy(&serializedResponse, &customerRequest)
 
-	jsonResponse.Data = serializedArticles
+	jsonResponse.Data = serializedResponse
 	response := models.SuccessResponse(jsonResponse)
 	ctx.JSON(http.StatusCreated, response)
-}
-
-func (c *Customer) ClearCustomerRequest(ctx *gin.Context) {
-	var jsonResponse models.JSONResponse
-
-	if err := c.DB.Exec("TRUNCATE customer_requests").Error; err != nil {
-		errResponse := models.ErrorResponse(jsonResponse, err.Error())
-		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
-	}
-
-	response := models.SuccessResponse(jsonResponse)
-	ctx.JSON(http.StatusOK, response)
 }
