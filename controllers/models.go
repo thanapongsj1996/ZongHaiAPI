@@ -85,6 +85,21 @@ type driverJobResponseWithDriver struct {
 	} `json:"driver"`
 }
 
+type driverJobResponseWithResponses struct {
+	driverJobResponse
+	DriverJobDeliveryResponses []struct {
+		ID           uint   `json:"id"`
+		Uuid         string `json:"uuid"`
+		FirstName    string `json:"firstName"`
+		LastName     string `json:"lastName"`
+		Items        string `json:"items"`
+		Description  string `json:"description"`
+		Phone        string `json:"phone"`
+		PickupPlace  string `json:"pickupPlace"`
+		DeliverPlace string `json:"deliverPlace"`
+	} `json:"driverJobDeliveryResponses"`
+}
+
 type createDriverJobForm struct {
 	Description      string    `form:"description"`
 	StartPrice       float64   `form:"startPrice"`
@@ -99,4 +114,28 @@ type createDriverJobForm struct {
 
 type updateDriverJobForm struct {
 	createDriverJobForm
+}
+
+type createDriverDeliveryJobResponseForm struct {
+	FirstName    string `form:"firstName"`
+	LastName     string `form:"lastName"`
+	Items        string `form:"items"`
+	Description  string `form:"description"`
+	Phone        string `form:"phone"`
+	PickupPlace  string `form:"pickupPlace"`
+	DeliverPlace string `form:"deliverPlace"`
+}
+
+type createDriverDeliveryJobResponseResponse struct {
+	Uuid         string `json:"uuid"`
+	FirstName    string `json:"firstName"`
+	LastName     string `json:"lastName"`
+	Items        string `json:"items"`
+	Description  string `json:"description"`
+	Phone        string `json:"phone"`
+	PickupPlace  string `json:"pickupPlace"`
+	DeliverPlace string `json:"deliverPlace"`
+	DriverJob    struct {
+		driverJobResponseWithDriver
+	} `json:"driverJob"`
 }

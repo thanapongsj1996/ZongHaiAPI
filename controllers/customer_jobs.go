@@ -15,16 +15,16 @@ type CustomerJob struct {
 
 func (c *CustomerJob) FindAllCustomerJobs(ctx *gin.Context) {
 	var jsonResponse models.JSONResponse
-	var customerRequests []models.CustomerJob
+	var customerJobs []models.CustomerJob
 
-	if err := c.DB.Find(&customerRequests).Error; err != nil {
+	if err := c.DB.Find(&customerJobs).Error; err != nil {
 		errResponse := models.ErrorResponse(jsonResponse, err.Error())
 		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
 		return
 	}
 
 	var serializedResponse []customerJobResponse
-	copier.Copy(&serializedResponse, &customerRequests)
+	copier.Copy(&serializedResponse, &customerJobs)
 
 	jsonResponse.Data = serializedResponse
 	response := models.SuccessResponse(jsonResponse)
@@ -40,17 +40,17 @@ func (c *CustomerJob) CreateCustomerJob(ctx *gin.Context) {
 		return
 	}
 
-	var customerRequest models.CustomerJob
-	copier.Copy(&customerRequest, &form)
+	var customerJob models.CustomerJob
+	copier.Copy(&customerJob, &form)
 
-	if err := c.DB.Create(&customerRequest).Error; err != nil {
+	if err := c.DB.Create(&customerJob).Error; err != nil {
 		errResponse := models.ErrorResponse(jsonResponse, err.Error())
 		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
 		return
 	}
 
 	var serializedResponse customerJobResponse
-	copier.Copy(&serializedResponse, &customerRequest)
+	copier.Copy(&serializedResponse, &customerJob)
 
 	jsonResponse.Data = serializedResponse
 	response := models.SuccessResponse(jsonResponse)

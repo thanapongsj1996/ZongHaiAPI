@@ -52,19 +52,19 @@ func (d *Driver) CreateDriverJob(ctx *gin.Context) {
 		return
 	}
 
-	var driverRequest models.DriverJob
-	copier.Copy(&driverRequest, &form)
-	driverRequest.Uuid = uuid.NewString()
-	driverRequest.Driver = driver
+	var driverJob models.DriverJob
+	copier.Copy(&driverJob, &form)
+	driverJob.Uuid = uuid.NewString()
+	driverJob.Driver = driver
 
-	if err := d.DB.Create(&driverRequest).Error; err != nil {
+	if err := d.DB.Create(&driverJob).Error; err != nil {
 		errResponse := models.ErrorResponse(jsonResponse, err.Error())
 		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
 		return
 	}
 
 	var serializedResponse driverJobResponse
-	copier.Copy(&serializedResponse, &driverRequest)
+	copier.Copy(&serializedResponse, &driverJob)
 
 	jsonResponse.Data = serializedResponse
 	response := models.SuccessResponse(jsonResponse)
@@ -73,7 +73,7 @@ func (d *Driver) CreateDriverJob(ctx *gin.Context) {
 
 func (d *Driver) UpdateDriverJob(ctx *gin.Context) {
 	var jsonResponse models.JSONResponse
-	var driverRequest models.DriverJob
+	var driverJob models.DriverJob
 
 	var form updateDriverJobForm
 	if err := ctx.ShouldBind(&form); err != nil {
@@ -86,27 +86,49 @@ func (d *Driver) UpdateDriverJob(ctx *gin.Context) {
 	driver := *driverSub.(*models.Driver)
 	driverJobUuid := ctx.Param("driverJobUuid")
 
-	if err := d.DB.Where("uuid = ?", driverJobUuid).First(&driverRequest).Error; err != nil {
+	if err := d.DB.Where("uuid = ?", driverJobUuid).First(&driverJob).Error; err != nil {
 		errResponse := models.ErrorResponse(jsonResponse, err.Error())
 		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
 		return
 	}
 
-	if driver.ID != driverRequest.DriverId {
+	if driver.ID != driverJob.DriverId {
 		errResponse := models.ErrorResponse(jsonResponse, "This job is not yours")
 		ctx.JSON(http.StatusForbidden, errResponse)
 		return
 	}
 
-	copier.Copy(&driverRequest, &form)
-	if err := d.DB.Model(driverRequest).Updates(&driverRequest).Error; err != nil {
+	copier.Copy(&driverJob, &form)
+	if err := d.DB.Model(driverJob).Updates(&driverJob).Error; err != nil {
 		errResponse := models.ErrorResponse(jsonResponse, err.Error())
 		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
 		return
 	}
 
 	var serializedResponse driverJobResponse
-	copier.Copy(&serializedResponse, &driverRequest)
+	copier.Copy(&serializedResponse, &driverJob)
+
+	jsonResponse.Data = serializedResponse
+	response := models.SuccessResponse(jsonResponse)
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (d *Driver) FindDriverJobsDetail(ctx *gin.Context) {
+	var jsonResponse models.JSONResponse
+	var driverJob models.DriverJob
+
+	driverSub, _ := ctx.Get("sub")
+	driver := *driverSub.(*models.Driver)
+	driverJobUuid := ctx.Param("driverJobUuid")
+
+	if err := d.DB.Preload("DriverJobDeliveryResponses").Where(models.DriverJob{DriverId: driver.ID, Uuid: driverJobUuid}).First(&driverJob).Error; err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+		return
+	}
+
+	var serializedResponse driverJobResponseWithResponses
+	copier.Copy(&serializedResponse, &driverJob)
 
 	jsonResponse.Data = serializedResponse
 	response := models.SuccessResponse(jsonResponse)
