@@ -13,17 +13,17 @@ type DriverJob struct {
 	DB *gorm.DB
 }
 
-func (d *DriverJob) FindAllDriverRequests(ctx *gin.Context) {
+func (d *DriverJob) FindAllDriverJobs(ctx *gin.Context) {
 	var jsonResponse models.JSONResponse
-	var driverRequests []models.DriverRequest
+	var driverRequests []models.DriverJob
 
-	if err := d.DB.Preload("Driver").Where(models.DriverRequest{IsActive: true}).Find(&driverRequests).Error; err != nil {
+	if err := d.DB.Preload("Driver").Where(models.DriverJob{IsActive: true}).Find(&driverRequests).Error; err != nil {
 		errResponse := models.ErrorResponse(jsonResponse, err.Error())
 		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
 		return
 	}
 
-	var serializedResponse []driverRequestResponseWithDriver
+	var serializedResponse []driverJobResponseWithDriver
 	copier.Copy(&serializedResponse, &driverRequests)
 
 	jsonResponse.Data = serializedResponse
@@ -31,18 +31,18 @@ func (d *DriverJob) FindAllDriverRequests(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
-func (d *DriverJob) FindDriverRequestByDriverRequestUuid(ctx *gin.Context) {
+func (d *DriverJob) FindDriverJobByDriverJobUuid(ctx *gin.Context) {
 	var jsonResponse models.JSONResponse
-	var driverRequests models.DriverRequest
-	driverRequestUuid := ctx.Param("driverRequestUuid")
+	var driverRequests models.DriverJob
+	driverJobUuid := ctx.Param("driverJobUuid")
 
-	if err := d.DB.Preload("Driver").Where("uuid = ?", driverRequestUuid).First(&driverRequests).Error; err != nil {
+	if err := d.DB.Preload("Driver").Where("uuid = ?", driverJobUuid).First(&driverRequests).Error; err != nil {
 		errResponse := models.ErrorResponse(jsonResponse, err.Error())
 		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
 		return
 	}
 
-	var serializedResponse []driverRequestResponse
+	var serializedResponse []driverJobResponse
 	copier.Copy(&serializedResponse, &driverRequests)
 
 	jsonResponse.Data = serializedResponse

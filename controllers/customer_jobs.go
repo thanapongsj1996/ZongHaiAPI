@@ -13,9 +13,9 @@ type CustomerJob struct {
 	DB *gorm.DB
 }
 
-func (c *CustomerJob) FindAllCustomerRequests(ctx *gin.Context) {
+func (c *CustomerJob) FindAllCustomerJobs(ctx *gin.Context) {
 	var jsonResponse models.JSONResponse
-	var customerRequests []models.CustomerRequest
+	var customerRequests []models.CustomerJob
 
 	if err := c.DB.Find(&customerRequests).Error; err != nil {
 		errResponse := models.ErrorResponse(jsonResponse, err.Error())
@@ -23,7 +23,7 @@ func (c *CustomerJob) FindAllCustomerRequests(ctx *gin.Context) {
 		return
 	}
 
-	var serializedResponse []customerRequestResponse
+	var serializedResponse []customerJobResponse
 	copier.Copy(&serializedResponse, &customerRequests)
 
 	jsonResponse.Data = serializedResponse
@@ -31,16 +31,16 @@ func (c *CustomerJob) FindAllCustomerRequests(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
-func (c *CustomerJob) CreateCustomerRequest(ctx *gin.Context) {
+func (c *CustomerJob) CreateCustomerJob(ctx *gin.Context) {
 	var jsonResponse models.JSONResponse
-	var form createCustomerRequestForm
+	var form createCustomerJobForm
 	if err := ctx.ShouldBind(&form); err != nil {
 		errResponse := models.ErrorResponse(jsonResponse, err.Error())
 		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
 		return
 	}
 
-	var customerRequest models.CustomerRequest
+	var customerRequest models.CustomerJob
 	copier.Copy(&customerRequest, &form)
 
 	if err := c.DB.Create(&customerRequest).Error; err != nil {
@@ -49,7 +49,7 @@ func (c *CustomerJob) CreateCustomerRequest(ctx *gin.Context) {
 		return
 	}
 
-	var serializedResponse customerRequestResponse
+	var serializedResponse customerJobResponse
 	copier.Copy(&serializedResponse, &customerRequest)
 
 	jsonResponse.Data = serializedResponse

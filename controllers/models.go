@@ -43,7 +43,7 @@ type driverUpdateProfileResponse struct {
 	ProfileImg string `json:"profileImg"`
 }
 
-type customerRequestResponse struct {
+type customerJobResponse struct {
 	Title           string  `json:"title"`
 	Description     string  `json:"description"`
 	Price           float64 `json:"price"`
@@ -52,7 +52,7 @@ type customerRequestResponse struct {
 	DeliverLocation string  `json:"deliverLocation"`
 }
 
-type createCustomerRequestForm struct {
+type createCustomerJobForm struct {
 	Title           string  `form:"title" binding:"required"`
 	Description     string  `form:"description"`
 	Price           float64 `form:"price" binding:"required"`
@@ -62,7 +62,7 @@ type createCustomerRequestForm struct {
 	IsActive        bool    `form:"isActive"`
 }
 
-type driverRequestResponse struct {
+type driverJobResponse struct {
 	Uuid             string    `json:"uuid"`
 	Description      string    `json:"description"`
 	StartPrice       float64   `json:"startPrice"`
@@ -75,8 +75,8 @@ type driverRequestResponse struct {
 	IsActive         bool      `json:"isActive"`
 }
 
-type driverRequestResponseWithDriver struct {
-	driverRequestResponse
+type driverJobResponseWithDriver struct {
+	driverJobResponse
 	Driver struct {
 		Uuid       string `json:"uuid"`
 		FirstName  string `json:"firstName"`
@@ -85,11 +85,7 @@ type driverRequestResponseWithDriver struct {
 	} `json:"driver"`
 }
 
-type driverRequestByDriverUuidResponse struct {
-	driverRequestResponse
-}
-
-type createDriverRequestForm struct {
+type createDriverJobForm struct {
 	Description      string    `form:"description"`
 	StartPrice       float64   `form:"startPrice"`
 	Phone            string    `form:"phone"`
@@ -101,6 +97,6 @@ type createDriverRequestForm struct {
 	IsActive         bool      `form:"isActive"`
 }
 
-type updateDriverRequestForm struct {
-	createDriverRequestForm
+type updateDriverJobForm struct {
+	createDriverJobForm
 }

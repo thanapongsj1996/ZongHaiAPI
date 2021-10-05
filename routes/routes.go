@@ -30,25 +30,25 @@ func Serve(r *gin.Engine) {
 		authGroup.PATCH("/driver/profile", authenticate, authController.DriverUpdateProfile)
 	}
 
-	customerRequestController := controllers.CustomerJob{DB: db}
-	customerRequestGroup := v1.Group("customer-request")
+	customerJobController := controllers.CustomerJob{DB: db}
+	customerJobGroup := v1.Group("customer-jobs")
 	{
-		customerRequestGroup.GET("", customerRequestController.FindAllCustomerRequests)
-		customerRequestGroup.POST("", customerRequestController.CreateCustomerRequest)
+		customerJobGroup.GET("", customerJobController.FindAllCustomerJobs)
+		customerJobGroup.POST("", customerJobController.CreateCustomerJob)
 	}
 
-	driverRequestController := controllers.DriverJob{DB: db}
-	driverRequestGroup := v1.Group("driver-request")
+	driverJobController := controllers.DriverJob{DB: db}
+	driverJobGroup := v1.Group("driver-jobs")
 	{
-		driverRequestGroup.GET("", driverRequestController.FindAllDriverRequests)
-		driverRequestGroup.GET("/:driverRequestUuid", driverRequestController.FindDriverRequestByDriverRequestUuid)
+		driverJobGroup.GET("", driverJobController.FindAllDriverJobs)
+		driverJobGroup.GET("/:driverJobUuid", driverJobController.FindDriverJobByDriverJobUuid)
 	}
 
 	driverController := controllers.Driver{DB: db}
 	driverGroup := v1.Group("driver")
 	{
-		driverGroup.GET("/jobs", authenticate, driverController.FindDriverRequests)
-		driverGroup.POST("/jobs", authenticate, driverController.CreateDriverRequest)
-		driverGroup.PATCH("/jobs/:driverRequestUuid", authenticate, driverController.UpdateDriverRequest)
+		driverGroup.GET("/jobs", authenticate, driverController.FindDriverJobs)
+		driverGroup.POST("/jobs", authenticate, driverController.CreateDriverJob)
+		driverGroup.PATCH("/jobs/:driverJobUuid", authenticate, driverController.UpdateDriverJob)
 	}
 }

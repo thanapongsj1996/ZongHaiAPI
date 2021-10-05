@@ -2,7 +2,7 @@ package models
 
 import "github.com/jinzhu/gorm"
 
-type CustomerRequest struct {
+type CustomerJob struct {
 	gorm.Model
 	Title           string  `gorm:"not null"`
 	Description     string  `gorm:"not null"`

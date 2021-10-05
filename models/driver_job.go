@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type DriverRequest struct {
+type DriverJob struct {
 	gorm.Model
 	Uuid             string    `gorm:"unique_index;"`
 	Description      string    `gorm:"not null"`
