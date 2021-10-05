@@ -13,47 +13,6 @@ type Auth struct {
 	DB *gorm.DB
 }
 
-type driverAuthForm struct {
-	Phone     string `json:"phone" binding:"required"`
-	Password  string `json:"password" binding:"required,min=6"`
-	FirstName string `json:"firstName" binding:"required"`
-	LastName  string `json:"lastName" binding:"required"`
-}
-
-type driverAuthResponse struct {
-	Uuid      string `json:"uuid"`
-	Phone     string `json:"phone"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-}
-
-type driverProfile struct {
-	Uuid             string `json:"uuid"`
-	Phone            string `json:"phone"`
-	FirstName        string `json:"firstName"`
-	LastName         string `json:"lastName"`
-	Address          string `json:"address"`
-	DriverLicenseID  string `json:"driverLicenseID"`
-	DriverLicenseImg string `json:"driverLicenseImg"`
-	ProfileImg       string `json:"profileImg"`
-	IsVerify         bool   `json:"isVerify"`
-	IsActive         bool   `json:"isActive"`
-}
-
-type driverUpdateProfileForm struct {
-	FirstName  string `form:"firstName"`
-	LastName   string `form:"lastName"`
-	Address    string `form:"address"`
-	ProfileImg string `form:"profileImg"`
-}
-
-type driverUpdateProfileResponse struct {
-	FirstName  string `json:"firstName"`
-	LastName   string `json:"lastName"`
-	Address    string `json:"address"`
-	ProfileImg string `json:"profileImg"`
-}
-
 func (a *Auth) GetDriverProfile(ctx *gin.Context) {
 	var jsonResponse models.JSONResponse
 	sub, _ := ctx.Get("sub")

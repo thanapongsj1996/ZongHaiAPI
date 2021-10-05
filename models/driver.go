@@ -17,7 +17,7 @@ type Driver struct {
 	DriverLicenseImg string
 	ProfileImg       string
 	IsVerify         bool `gorm:"default:false; not null"`
-	IsActive         bool `gorm:"default:false; not null"`
+	IsActive         bool `gorm:"default:true; not null"`
 }
 
 func (d *Driver) GenerateEncryptedPassword() string {
