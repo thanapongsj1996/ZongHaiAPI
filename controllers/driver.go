@@ -163,3 +163,111 @@ func (d *Driver) SetDeliveryJobIsAcceptResponse(ctx *gin.Context) {
 	response := models.SuccessResponse(jsonResponse)
 	ctx.JSON(http.StatusOK, response)
 }
+
+func (d *Driver) FindDriverJobsPreOrder(ctx *gin.Context) {
+	var jsonResponse models.JSONResponse
+	var driverJobs []models.DriverJobPreOrder
+
+	driverSub, _ := ctx.Get("sub")
+	driver := *driverSub.(*models.Driver)
+
+	if err := d.DB.Where(models.DriverJobPreOrder{DriverId: driver.ID}).Find(&driverJobs).Error; err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+		return
+	}
+
+	var serializedResponse []driverJobPreOrderResponse
+	copier.Copy(&serializedResponse, &driverJobs)
+
+	jsonResponse.Data = serializedResponse
+	response := models.SuccessResponse(jsonResponse)
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (d *Driver) FindDriverJobsPreOrderDetail(ctx *gin.Context) {
+	var jsonResponse models.JSONResponse
+	var driverJob models.DriverJobPreOrder
+
+	driverSub, _ := ctx.Get("sub")
+	driver := *driverSub.(*models.Driver)
+	driverJobUuid := ctx.Param("driverJobUuid")
+
+	if err := d.DB.Preload("DriverJobPreOrderResponses").Where(models.DriverJobPreOrder{DriverId: driver.ID, Uuid: driverJobUuid}).First(&driverJob).Error; err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+		return
+	}
+
+	var serializedResponse driverJobPreOrderResponseWithResponses
+	copier.Copy(&serializedResponse, &driverJob)
+
+	jsonResponse.Data = serializedResponse
+	response := models.SuccessResponse(jsonResponse)
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (d *Driver) CreateDriverJobPreOrder(ctx *gin.Context) {
+	var jsonResponse models.JSONResponse
+
+	var form createDriverJobPreOrderForm
+	if err := ctx.ShouldBind(&form); err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+		return
+	}
+
+	driverSub, _ := ctx.Get("sub")
+	driver := *driverSub.(*models.Driver)
+	if !driver.IsVerify || !driver.IsActive {
+		errResponse := models.ErrorResponse(jsonResponse, "User is not verify")
+		ctx.JSON(http.StatusBadRequest, errResponse)
+		return
+	}
+
+	var driverJobPreOrder models.DriverJobPreOrder
+	copier.Copy(&driverJobPreOrder, &form)
+	driverJobPreOrder.Uuid = utils.GenerateJobUuid()
+	driverJobPreOrder.Driver = driver
+
+	if err := d.DB.Create(&driverJobPreOrder).Error; err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+		return
+	}
+
+	var serializedResponse driverJobPreOrderResponse
+	copier.Copy(&serializedResponse, &driverJobPreOrder)
+
+	jsonResponse.Data = serializedResponse
+	response := models.SuccessResponse(jsonResponse)
+	ctx.JSON(http.StatusCreated, response)
+}
+
+func (d *Driver) SetPreOrderJobIsAcceptResponse(ctx *gin.Context) {
+	var jsonResponse models.JSONResponse
+	var driverJob models.DriverJobPreOrder
+
+	driverSub, _ := ctx.Get("sub")
+	driver := *driverSub.(*models.Driver)
+	driverJobUuid := ctx.Param("driverJobUuid")
+	responseUuid := ctx.Param("responseUuid")
+	acceptValue, _ := strconv.ParseBool(ctx.Param("acceptValue"))
+
+	if err := d.DB.Where(models.DriverJobPreOrder{DriverId: driver.ID, Uuid: driverJobUuid}).Find(&driverJob).Error; err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+		return
+	}
+
+	var jobResponse models.DriverJobPreOrderResponse
+
+	if err := d.DB.Model(&jobResponse).Where(models.DriverJobPreOrderResponse{Uuid: responseUuid}).Update("is_driver_accept", acceptValue).Error; err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+		return
+	}
+
+	response := models.SuccessResponse(jsonResponse)
+	ctx.JSON(http.StatusOK, response)
+}

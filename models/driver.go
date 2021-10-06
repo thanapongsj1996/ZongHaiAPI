@@ -16,7 +16,7 @@ type Driver struct {
 	DriverLicenseID  string
 	DriverLicenseImg string
 	ProfileImg       string
-	IsVerify         bool `gorm:"default:false; not null"`
+	IsVerify         bool `gorm:"default:true; not null"`
 	IsActive         bool `gorm:"default:true; not null"`
 }
 

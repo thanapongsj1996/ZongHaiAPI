@@ -42,7 +42,10 @@ func Serve(r *gin.Engine) {
 	{
 		driverJobGroup.GET("", driverJobController.FindAllDriverJobs)
 		driverJobGroup.GET("/:driverJobUuid", driverJobController.FindDriverJobByDriverJobUuid)
-		driverJobGroup.POST("/:driverJobUuid/delivery", driverJobController.CreateDriverDeliveryJobResponse)
+		driverJobGroup.POST("/:driverJobUuid", driverJobController.CreateDriverDeliveryJobResponse)
+
+		driverJobGroup.GET("/pre-order", driverJobController.FindAllDriverJobsPreOrder)
+		driverJobGroup.POST("pre-order/:driverJobUuid", driverJobController.CreateDriverPreOrderJobResponse)
 	}
 
 	driverController := controllers.Driver{DB: db}
@@ -52,7 +55,11 @@ func Serve(r *gin.Engine) {
 		driverGroup.POST("/jobs", authenticate, driverController.CreateDriverJob)
 		driverGroup.PATCH("/jobs/:driverJobUuid", authenticate, driverController.UpdateDriverJob)
 		driverGroup.GET("/jobs/:driverJobUuid", authenticate, driverController.FindDriverJobsDetail)
-
 		driverGroup.PATCH("/jobs/:driverJobUuid/:responseUuid/accept/:acceptValue", authenticate, driverController.SetDeliveryJobIsAcceptResponse)
+
+		driverGroup.GET("/jobs/pre-order", authenticate, driverController.FindDriverJobsPreOrder)
+		driverGroup.GET("/jobs/pre-order/:driverJobUuid", authenticate, driverController.FindDriverJobsPreOrderDetail)
+		driverGroup.POST("/jobs/pre-order", authenticate, driverController.CreateDriverJobPreOrder)
+		driverGroup.PATCH("/jobs/pre-order/:driverJobUuid/:responseUuid/accept/:acceptValue", authenticate, driverController.SetPreOrderJobIsAcceptResponse)
 	}
 }

@@ -87,3 +87,58 @@ func (d *DriverJob) CreateDriverDeliveryJobResponse(ctx *gin.Context) {
 	response := models.SuccessResponse(jsonResponse)
 	ctx.JSON(http.StatusOK, response)
 }
+
+func (d *DriverJob) FindAllDriverJobsPreOrder(ctx *gin.Context) {
+	var jsonResponse models.JSONResponse
+	var driverJobsPreOrder []models.DriverJobPreOrder
+
+	if err := d.DB.Preload("Driver").Where(models.DriverJobPreOrder{IsActive: true}).Find(&driverJobsPreOrder).Error; err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+		return
+	}
+
+	var serializedResponse []driverJobPreOrderResponseWithDriver
+	copier.Copy(&serializedResponse, &driverJobsPreOrder)
+
+	jsonResponse.Data = serializedResponse
+	response := models.SuccessResponse(jsonResponse)
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (d *DriverJob) CreateDriverPreOrderJobResponse(ctx *gin.Context) {
+	var jsonResponse models.JSONResponse
+	var driverJob models.DriverJobPreOrder
+	driverJobUuid := ctx.Param("driverJobUuid")
+
+	var form createDriverPreOrderJobResponseForm
+	if err := ctx.ShouldBind(&form); err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+		return
+	}
+
+	if err := d.DB.Preload("Driver").Where(models.DriverJobPreOrder{Uuid: driverJobUuid, IsActive: true}).First(&driverJob).Error; err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, "Job is not found")
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+		return
+	}
+
+	var jobResponse models.DriverJobPreOrderResponse
+	copier.Copy(&jobResponse, &form)
+	jobResponse.Uuid = uuid.NewString()
+	jobResponse.DriverJobPreOrder = driverJob
+
+	if err := d.DB.Create(&jobResponse).Error; err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+		return
+	}
+
+	var serializedResponse createDriverPreOrderJobResponseResponse
+	copier.Copy(&serializedResponse, &jobResponse)
+
+	jsonResponse.Data = serializedResponse
+	response := models.SuccessResponse(jsonResponse)
+	ctx.JSON(http.StatusOK, response)
+}

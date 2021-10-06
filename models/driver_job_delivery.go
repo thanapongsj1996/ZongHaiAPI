@@ -16,7 +16,7 @@ type DriverJob struct {
 	DestinationPlace           string    `gorm:"not null"`
 	DestinationTime            time.Time `gorm:"not null"`
 	PlaceOnTheWay              string
-	IsActive                   bool `gorm:"default: false; not null"`
+	IsActive                   bool `gorm:"default: true; not null"`
 	DriverId                   uint
 	Driver                     Driver
 	DriverJobDeliveryResponses []DriverJobDeliveryResponse

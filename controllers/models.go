@@ -142,3 +142,75 @@ type createDriverDeliveryJobResponseResponse struct {
 		driverJobResponseWithDriver
 	} `json:"driverJob"`
 }
+
+type DriverJobPreOrderResponse struct {
+	ID             uint   `json:"id"`
+	Uuid           string `json:"uuid"`
+	FirstName      string `json:"firstName"`
+	LastName       string `json:"lastName"`
+	Items          string `json:"items"`
+	Description    string `json:"description"`
+	Phone          string `json:"phone"`
+	DeliverPlace   string `json:"deliverPlace"`
+	IsDriverAccept bool   `json:"isDriverAccept"`
+}
+
+type driverJobPreOrderResponse struct {
+	Uuid             string    `json:"uuid"`
+	Description      string    `json:"description"`
+	Price            float64   `json:"price"`
+	Phone            string    `json:"phone"`
+	ShopPlace        string    `json:"shopPlace"`
+	DepartureTime    time.Time `json:"departureTime" time_format:"2006-01-02T15:04:05+0700"`
+	DestinationPlace string    `json:"destinationPlace"`
+	DestinationTime  time.Time `json:"destinationTime" time_format:"2006-01-02T15:04:05+0700"`
+	IsActive         bool      `json:"isActive"`
+}
+
+type driverJobPreOrderResponseWithDriver struct {
+	driverJobPreOrderResponse
+	Driver struct {
+		Uuid       string `json:"uuid"`
+		FirstName  string `json:"firstName"`
+		LastName   string `json:"lastName"`
+		ProfileImg string `json:"profileImg"`
+	} `json:"driver"`
+}
+
+type driverJobPreOrderResponseWithResponses struct {
+	driverJobPreOrderResponse
+	DriverJobPreOrderResponses []DriverJobPreOrderResponse `json:"driverJobPreOrderResponses"`
+}
+
+type createDriverJobPreOrderForm struct {
+	Description      string    `form:"description"`
+	Price            float64   `form:"price"`
+	Phone            string    `form:"phone"`
+	ShopPlace        string    `form:"shopPlace"`
+	DepartureTime    time.Time `form:"departureTime" time_format:"2006-01-02T15:04:05+0700"`
+	DestinationPlace string    `form:"destinationPlace"`
+	DestinationTime  time.Time `form:"destinationTime" time_format:"2006-01-02T15:04:05+0700"`
+	IsActive         bool      `form:"isActive"`
+}
+
+type createDriverPreOrderJobResponseForm struct {
+	FirstName    string `form:"firstName"`
+	LastName     string `form:"lastName"`
+	Items        string `form:"items"`
+	Description  string `form:"description"`
+	Phone        string `form:"phone"`
+	DeliverPlace string `form:"deliverPlace"`
+}
+
+type createDriverPreOrderJobResponseResponse struct {
+	Uuid              string `json:"uuid"`
+	FirstName         string `json:"firstName"`
+	LastName          string `json:"lastName"`
+	Items             string `json:"items"`
+	Description       string `json:"description"`
+	Phone             string `json:"phone"`
+	DeliverPlace      string `json:"deliverPlace"`
+	DriverJobPreOrder struct {
+		driverJobPreOrderResponseWithDriver
+	} `json:"driverJobPreOrder"`
+}
