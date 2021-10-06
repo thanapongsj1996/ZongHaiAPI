@@ -87,17 +87,20 @@ type driverJobResponseWithDriver struct {
 
 type driverJobResponseWithResponses struct {
 	driverJobResponse
-	DriverJobDeliveryResponses []struct {
-		ID           uint   `json:"id"`
-		Uuid         string `json:"uuid"`
-		FirstName    string `json:"firstName"`
-		LastName     string `json:"lastName"`
-		Items        string `json:"items"`
-		Description  string `json:"description"`
-		Phone        string `json:"phone"`
-		PickupPlace  string `json:"pickupPlace"`
-		DeliverPlace string `json:"deliverPlace"`
-	} `json:"driverJobDeliveryResponses"`
+	DriverJobDeliveryResponses []DriverJobDeliveryResponse `json:"driverJobDeliveryResponses"`
+}
+
+type DriverJobDeliveryResponse struct {
+	ID             uint   `json:"id"`
+	Uuid           string `json:"uuid"`
+	FirstName      string `json:"firstName"`
+	LastName       string `json:"lastName"`
+	Items          string `json:"items"`
+	Description    string `json:"description"`
+	Phone          string `json:"phone"`
+	PickupPlace    string `json:"pickupPlace"`
+	DeliverPlace   string `json:"deliverPlace"`
+	IsDriverAccept bool   `json:"isDriverAccept"`
 }
 
 type createDriverJobForm struct {

@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 	"zonghai-api/config"
 	"zonghai-api/models"
 )
@@ -22,6 +23,8 @@ func Authenticate() *jwt.GinJWTMiddleware {
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		// secret key
 		Key: []byte(os.Getenv("SECRET_KEY")),
+
+		Timeout: 24 * 90 * time.Hour,
 
 		IdentityKey: identityKey,
 

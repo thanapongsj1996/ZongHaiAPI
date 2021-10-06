@@ -42,7 +42,7 @@ func Serve(r *gin.Engine) {
 	{
 		driverJobGroup.GET("", driverJobController.FindAllDriverJobs)
 		driverJobGroup.GET("/:driverJobUuid", driverJobController.FindDriverJobByDriverJobUuid)
-		driverJobGroup.POST("/:driverJobUuid/delivery", driverJobController.CreateDriverDeliveryJob)
+		driverJobGroup.POST("/:driverJobUuid/delivery", driverJobController.CreateDriverDeliveryJobResponse)
 	}
 
 	driverController := controllers.Driver{DB: db}
@@ -52,5 +52,7 @@ func Serve(r *gin.Engine) {
 		driverGroup.POST("/jobs", authenticate, driverController.CreateDriverJob)
 		driverGroup.PATCH("/jobs/:driverJobUuid", authenticate, driverController.UpdateDriverJob)
 		driverGroup.GET("/jobs/:driverJobUuid", authenticate, driverController.FindDriverJobsDetail)
+
+		driverGroup.PATCH("/jobs/:driverJobUuid/:responseUuid/accept/:acceptValue", authenticate, driverController.SetDeliveryJobIsAcceptResponse)
 	}
 }

@@ -2,11 +2,12 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
 	"gorm.io/gorm"
 	"net/http"
+	"strconv"
 	"zonghai-api/models"
+	"zonghai-api/utils"
 )
 
 type Driver struct {
@@ -54,7 +55,7 @@ func (d *Driver) CreateDriverJob(ctx *gin.Context) {
 
 	var driverJob models.DriverJob
 	copier.Copy(&driverJob, &form)
-	driverJob.Uuid = uuid.NewString()
+	driverJob.Uuid = utils.GenerateJobUuid()
 	driverJob.Driver = driver
 
 	if err := d.DB.Create(&driverJob).Error; err != nil {
@@ -131,6 +132,34 @@ func (d *Driver) FindDriverJobsDetail(ctx *gin.Context) {
 	copier.Copy(&serializedResponse, &driverJob)
 
 	jsonResponse.Data = serializedResponse
+	response := models.SuccessResponse(jsonResponse)
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (d *Driver) SetDeliveryJobIsAcceptResponse(ctx *gin.Context) {
+	var jsonResponse models.JSONResponse
+	var driverJob models.DriverJob
+
+	driverSub, _ := ctx.Get("sub")
+	driver := *driverSub.(*models.Driver)
+	driverJobUuid := ctx.Param("driverJobUuid")
+	responseUuid := ctx.Param("responseUuid")
+	acceptValue, _ := strconv.ParseBool(ctx.Param("acceptValue"))
+
+	if err := d.DB.Where(models.DriverJob{DriverId: driver.ID, Uuid: driverJobUuid}).Find(&driverJob).Error; err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+		return
+	}
+
+	var jobResponse models.DriverJobDeliveryResponse
+
+	if err := d.DB.Model(&jobResponse).Where(models.DriverJobDeliveryResponse{Uuid: responseUuid}).Update("is_driver_accept", acceptValue).Error; err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+		return
+	}
+
 	response := models.SuccessResponse(jsonResponse)
 	ctx.JSON(http.StatusOK, response)
 }

@@ -43,7 +43,7 @@ func (d *DriverJob) FindDriverJobByDriverJobUuid(ctx *gin.Context) {
 		return
 	}
 
-	var serializedResponse []driverJobResponse
+	var serializedResponse driverJobResponse
 	copier.Copy(&serializedResponse, &driverJobs)
 
 	jsonResponse.Data = serializedResponse
@@ -51,7 +51,7 @@ func (d *DriverJob) FindDriverJobByDriverJobUuid(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
-func (d *DriverJob) CreateDriverDeliveryJob(ctx *gin.Context) {
+func (d *DriverJob) CreateDriverDeliveryJobResponse(ctx *gin.Context) {
 	var jsonResponse models.JSONResponse
 	var driverJob models.DriverJob
 	driverJobUuid := ctx.Param("driverJobUuid")
