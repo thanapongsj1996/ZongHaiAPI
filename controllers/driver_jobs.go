@@ -85,7 +85,7 @@ func (d *DriverJob) CreateDriverDeliveryJobResponse(ctx *gin.Context) {
 
 	jsonResponse.Data = serializedResponse
 	response := models.SuccessResponse(jsonResponse)
-	ctx.JSON(http.StatusOK, response)
+	ctx.JSON(http.StatusCreated, response)
 }
 
 func (d *DriverJob) FindAllDriverJobsPreOrder(ctx *gin.Context) {
@@ -140,5 +140,5 @@ func (d *DriverJob) CreateDriverPreOrderJobResponse(ctx *gin.Context) {
 
 	jsonResponse.Data = serializedResponse
 	response := models.SuccessResponse(jsonResponse)
-	ctx.JSON(http.StatusOK, response)
+	ctx.JSON(http.StatusCreated, response)
 }
