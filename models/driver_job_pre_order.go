@@ -12,9 +12,9 @@ type DriverJobPreOrder struct {
 	Price                      float64   `gorm:"not null"`
 	Phone                      string    `gorm:"not null"`
 	ShopPlace                  string    `gorm:"not null"`
-	DepartureTime              time.Time `gorm:"not null" time_format:"2006-01-02T15:04:05+07"`
+	DepartureTime              time.Time `gorm:"not null" time_format:"2006-01-02 3:04PM"`
 	DestinationPlace           string    `gorm:"not null"`
-	DestinationTime            time.Time `gorm:"not null" time_format:"2006-01-02T15:04:05+07"`
+	DestinationTime            time.Time `gorm:"not null" time_format:"2006-01-02 3:04PM"`
 	IsActive                   bool      `gorm:"default: true; not null"`
 	DriverId                   uint
 	Driver                     Driver
