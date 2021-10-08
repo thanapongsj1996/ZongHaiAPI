@@ -2,7 +2,6 @@ package controllers
 
 import "time"
 
-// AuthForm
 type driverAuthForm struct {
 	Phone     string `json:"phone" binding:"required"`
 	Password  string `json:"password" binding:"required,min=6"`
