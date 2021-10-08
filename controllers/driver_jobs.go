@@ -43,7 +43,7 @@ func (d *DriverJob) FindDriverJobByDriverJobUuid(ctx *gin.Context) {
 		return
 	}
 
-	var serializedResponse driverJobResponse
+	var serializedResponse driverJobResponseWithDriver
 	copier.Copy(&serializedResponse, &driverJobs)
 
 	jsonResponse.Data = serializedResponse
