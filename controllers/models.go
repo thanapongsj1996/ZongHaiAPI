@@ -69,9 +69,9 @@ type driverJobResponse struct {
 	StartPrice       float64   `json:"startPrice"`
 	Phone            string    `json:"phone"`
 	DeparturePlace   string    `json:"departurePlace"`
-	DepartureTime    time.Time `json:"departureTime" time_format:"2006-01-02T15:04:05+0700"`
+	DepartureTime    time.Time `json:"departureTime" time_format:"2006-01-02T15:04:05+07"`
 	DestinationPlace string    `json:"destinationPlace"`
-	DestinationTime  time.Time `json:"destinationTime" time_format:"2006-01-02T15:04:05+0700"`
+	DestinationTime  time.Time `json:"destinationTime" time_format:"2006-01-02T15:04:05+07"`
 	PlaceOnTheWay    string    `json:"placeOnTheWay"`
 	IsActive         bool      `json:"isActive"`
 }
@@ -110,9 +110,9 @@ type createDriverJobForm struct {
 	StartPrice       float64   `form:"startPrice"`
 	Phone            string    `form:"phone"`
 	DeparturePlace   string    `form:"departurePlace"`
-	DepartureTime    time.Time `form:"departureTime" time_format:"2006-01-02T15:04:05+0700"`
+	DepartureTime    time.Time `form:"departureTime" time_format:"2006-01-02T15:04:05+07"`
 	DestinationPlace string    `form:"destinationPlace"`
-	DestinationTime  time.Time `form:"destinationTime" time_format:"2006-01-02T15:04:05+0700"`
+	DestinationTime  time.Time `form:"destinationTime" time_format:"2006-01-02T15:04:05+07"`
 	PlaceOnTheWay    string    `form:"placeOnTheWay"`
 	IsActive         bool      `form:"isActive"`
 }
@@ -165,9 +165,9 @@ type driverJobPreOrderResponse struct {
 	Price            float64   `json:"price"`
 	Phone            string    `json:"phone"`
 	ShopPlace        string    `json:"shopPlace"`
-	DepartureTime    time.Time `json:"departureTime" time_format:"2006-01-02T15:04:05+0700"`
+	DepartureTime    time.Time `json:"departureTime" time_format:"2006-01-02T15:04:05+07"`
 	DestinationPlace string    `json:"destinationPlace"`
-	DestinationTime  time.Time `json:"destinationTime" time_format:"2006-01-02T15:04:05+0700"`
+	DestinationTime  time.Time `json:"destinationTime" time_format:"2006-01-02T15:04:05+07"`
 	IsActive         bool      `json:"isActive"`
 }
 
@@ -191,9 +191,9 @@ type createDriverJobPreOrderForm struct {
 	Price            float64   `form:"price"`
 	Phone            string    `form:"phone"`
 	ShopPlace        string    `form:"shopPlace"`
-	DepartureTime    time.Time `form:"departureTime" time_format:"2006-01-02T15:04:05+0700"`
+	DepartureTime    time.Time `form:"departureTime" time_format:"2006-01-02T15:04:05+07"`
 	DestinationPlace string    `form:"destinationPlace"`
-	DestinationTime  time.Time `form:"destinationTime" time_format:"2006-01-02T15:04:05+0700"`
+	DestinationTime  time.Time `form:"destinationTime" time_format:"2006-01-02T15:04:05+07"`
 	IsActive         bool      `form:"isActive"`
 }
 
