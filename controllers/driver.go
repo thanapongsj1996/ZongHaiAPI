@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
 	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 	"zonghai-api/models"
-	"zonghai-api/utils"
 )
 
 type Driver struct {
@@ -55,7 +55,7 @@ func (d *Driver) CreateDriverJob(ctx *gin.Context) {
 
 	var driverJob models.DriverJob
 	copier.Copy(&driverJob, &form)
-	driverJob.Uuid = utils.GenerateJobUuid()
+	driverJob.Uuid = uuid.NewString()
 	driverJob.Driver = driver
 
 	if err := d.DB.Create(&driverJob).Error; err != nil {
@@ -227,7 +227,7 @@ func (d *Driver) CreateDriverJobPreOrder(ctx *gin.Context) {
 
 	var driverJobPreOrder models.DriverJobPreOrder
 	copier.Copy(&driverJobPreOrder, &form)
-	driverJobPreOrder.Uuid = utils.GenerateJobUuid()
+	driverJobPreOrder.Uuid = uuid.NewString()
 	driverJobPreOrder.Driver = driver
 
 	if err := d.DB.Create(&driverJobPreOrder).Error; err != nil {

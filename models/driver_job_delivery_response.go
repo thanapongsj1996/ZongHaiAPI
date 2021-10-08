@@ -11,7 +11,8 @@ type DriverJobDeliveryResponse struct {
 	LastName       string `gorm:"not null"`
 	Items          string `gorm:"not null"`
 	Description    string `gorm:"not null"`
-	Phone          string `gorm:"not null"`
+	SenderPhone    string `gorm:"not null"`
+	ReceiverPhone  string `gorm:"not null"`
 	PickupPlace    string `gorm:"not null"`
 	DeliverPlace   string `gorm:"not null"`
 	IsActive       bool   `gorm:"default: true; not null"`

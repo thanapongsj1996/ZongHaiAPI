@@ -97,7 +97,8 @@ type DriverJobDeliveryResponse struct {
 	LastName       string `json:"lastName"`
 	Items          string `json:"items"`
 	Description    string `json:"description"`
-	Phone          string `json:"phone"`
+	SenderPhone    string `json:"senderPhone"`
+	ReceiverPhone  string `json:"receiverPhone"`
 	PickupPlace    string `json:"pickupPlace"`
 	DeliverPlace   string `json:"deliverPlace"`
 	IsDriverAccept bool   `json:"isDriverAccept"`
@@ -120,25 +121,27 @@ type updateDriverJobForm struct {
 }
 
 type createDriverDeliveryJobResponseForm struct {
-	FirstName    string `form:"firstName"`
-	LastName     string `form:"lastName"`
-	Items        string `form:"items"`
-	Description  string `form:"description"`
-	Phone        string `form:"phone"`
-	PickupPlace  string `form:"pickupPlace"`
-	DeliverPlace string `form:"deliverPlace"`
+	FirstName     string `form:"firstName"`
+	LastName      string `form:"lastName"`
+	Items         string `form:"items"`
+	Description   string `form:"description"`
+	SenderPhone   string `form:"senderPhone"`
+	ReceiverPhone string `form:"receiverPhone"`
+	PickupPlace   string `form:"pickupPlace"`
+	DeliverPlace  string `form:"deliverPlace"`
 }
 
 type createDriverDeliveryJobResponseResponse struct {
-	Uuid         string `json:"uuid"`
-	FirstName    string `json:"firstName"`
-	LastName     string `json:"lastName"`
-	Items        string `json:"items"`
-	Description  string `json:"description"`
-	Phone        string `json:"phone"`
-	PickupPlace  string `json:"pickupPlace"`
-	DeliverPlace string `json:"deliverPlace"`
-	DriverJob    struct {
+	Uuid          string `json:"uuid"`
+	FirstName     string `json:"firstName"`
+	LastName      string `json:"lastName"`
+	Items         string `json:"items"`
+	Description   string `json:"description"`
+	SenderPhone   string `json:"senderPhone"`
+	ReceiverPhone string `json:"receiverPhone"`
+	PickupPlace   string `json:"pickupPlace"`
+	DeliverPlace  string `json:"deliverPlace"`
+	DriverJob     struct {
 		driverJobResponseWithDriver
 	} `json:"driverJob"`
 }
