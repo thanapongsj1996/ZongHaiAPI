@@ -106,6 +106,25 @@ func (d *DriverJob) FindAllDriverJobsPreOrder(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+func (d *DriverJob) FindDriverJobsPreOrderByJobUuid(ctx *gin.Context) {
+	var jsonResponse models.JSONResponse
+	var driverJobsPreOrder models.DriverJobPreOrder
+	driverJobUuid := ctx.Param("driverJobUuid")
+
+	if err := d.DB.Preload("Driver").Where(models.DriverJobPreOrder{IsActive: true, Uuid: driverJobUuid}).First(&driverJobsPreOrder).Error; err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+		return
+	}
+
+	var serializedResponse driverJobPreOrderResponseWithDriver
+	copier.Copy(&serializedResponse, &driverJobsPreOrder)
+
+	jsonResponse.Data = serializedResponse
+	response := models.SuccessResponse(jsonResponse)
+	ctx.JSON(http.StatusOK, response)
+}
+
 func (d *DriverJob) CreateDriverPreOrderJobResponse(ctx *gin.Context) {
 	var jsonResponse models.JSONResponse
 	var driverJob models.DriverJobPreOrder

@@ -45,6 +45,7 @@ func Serve(r *gin.Engine) {
 		driverJobGroup.POST("/:driverJobUuid", driverJobController.CreateDriverDeliveryJobResponse)
 
 		driverJobGroup.GET("/pre-order", driverJobController.FindAllDriverJobsPreOrder)
+		driverJobGroup.GET("pre-order/:driverJobUuid", driverJobController.FindDriverJobsPreOrderByJobUuid)
 		driverJobGroup.POST("pre-order/:driverJobUuid", driverJobController.CreateDriverPreOrderJobResponse)
 	}
 
