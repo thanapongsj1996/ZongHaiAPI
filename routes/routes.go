@@ -63,4 +63,10 @@ func Serve(r *gin.Engine) {
 		driverGroup.POST("/jobs/pre-order", authenticate, driverController.CreateDriverJobPreOrder)
 		driverGroup.PATCH("/jobs/pre-order/:driverJobUuid/:responseUuid/accept/:acceptValue", authenticate, driverController.SetPreOrderJobIsAcceptResponse)
 	}
+
+	adminController := controllers.Admin{DB: db}
+	adminGroup := v1.Group("admin")
+	{
+		adminGroup.POST("/delivery-jobs/responses", adminController.GetAllDeliveryResponse)
+	}
 }
