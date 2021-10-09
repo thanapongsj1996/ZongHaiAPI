@@ -68,5 +68,6 @@ func Serve(r *gin.Engine) {
 	adminGroup := v1.Group("admin")
 	{
 		adminGroup.POST("/delivery-jobs/responses", adminController.GetAllDeliveryResponse)
+		adminGroup.POST("/preorder-jobs/responses", adminController.GetAllPreOrderResponse)
 	}
 }
