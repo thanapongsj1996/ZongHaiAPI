@@ -161,3 +161,53 @@ func (d *DriverJob) CreateDriverPreOrderJobResponse(ctx *gin.Context) {
 	response := models.SuccessResponse(jsonResponse)
 	ctx.JSON(http.StatusCreated, response)
 }
+
+type ProvidedJobsResponse struct {
+	Uuid             string  `json:"uuid"`
+	FirstName        string  `json:"firstName"`
+	LastName         string  `json:"lastName"`
+	Description      string  `json:"description"`
+	Price            float64 `json:"price"`
+	Phone            string  `json:"phone"`
+	DeparturePlace   string  `json:"departurePlace"`
+	DestinationPlace string  `json:"destinationPlace"`
+	PlaceOnTheWay    string  `json:"placeOnTheWay"`
+	IsActive         bool    `json:"isActive"`
+}
+
+func (d *DriverJob) FindProvidedJobs(ctx *gin.Context) {
+	var jsonResponse models.JSONResponse
+	var providedJobs []models.ProvidedJob
+
+	if err := d.DB.Find(&providedJobs).Error; err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+		return
+	}
+
+	var serializedResponse []ProvidedJobsResponse
+	copier.Copy(&serializedResponse, &providedJobs)
+
+	jsonResponse.Data = serializedResponse
+	response := models.SuccessResponse(jsonResponse)
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (d *DriverJob) FindProvidedJobsByUuid(ctx *gin.Context) {
+	var jsonResponse models.JSONResponse
+	var providedJob models.ProvidedJob
+
+	providedJobUuid := ctx.Param("providedJobUuid")
+	if err := d.DB.Where(models.ProvidedJob{Uuid: providedJobUuid}).Find(&providedJob).Error; err != nil {
+		errResponse := models.ErrorResponse(jsonResponse, err.Error())
+		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
+		return
+	}
+
+	var serializedResponse ProvidedJobsResponse
+	copier.Copy(&serializedResponse, &providedJob)
+
+	jsonResponse.Data = serializedResponse
+	response := models.SuccessResponse(jsonResponse)
+	ctx.JSON(http.StatusOK, response)
+}

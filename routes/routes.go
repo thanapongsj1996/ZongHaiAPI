@@ -45,8 +45,11 @@ func Serve(r *gin.Engine) {
 		driverJobGroup.POST("/:driverJobUuid", driverJobController.CreateDriverDeliveryJobResponse)
 
 		driverJobGroup.GET("/pre-order", driverJobController.FindAllDriverJobsPreOrder)
-		driverJobGroup.GET("pre-order/:driverJobUuid", driverJobController.FindDriverJobsPreOrderByJobUuid)
-		driverJobGroup.POST("pre-order/:driverJobUuid", driverJobController.CreateDriverPreOrderJobResponse)
+		driverJobGroup.GET("/pre-order/:driverJobUuid", driverJobController.FindDriverJobsPreOrderByJobUuid)
+		driverJobGroup.POST("/pre-order/:driverJobUuid", driverJobController.CreateDriverPreOrderJobResponse)
+
+		driverJobGroup.GET("/provided-jobs", driverJobController.FindProvidedJobs)
+		driverJobGroup.GET("/provided-jobs/:providedJobUuid", driverJobController.FindProvidedJobsByUuid)
 	}
 
 	driverController := controllers.Driver{DB: db}
@@ -69,5 +72,6 @@ func Serve(r *gin.Engine) {
 	{
 		adminGroup.POST("/delivery-jobs/responses", adminController.GetAllDeliveryResponse)
 		adminGroup.POST("/preorder-jobs/responses", adminController.GetAllPreOrderResponse)
+		adminGroup.POST("/provided-jobs", adminController.AddProvidedJobs)
 	}
 }
