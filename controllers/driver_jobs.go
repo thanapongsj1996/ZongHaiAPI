@@ -198,7 +198,7 @@ func (d *DriverJob) FindProvidedJobsByUuid(ctx *gin.Context) {
 	var providedJob models.ProvidedJob
 
 	providedJobUuid := ctx.Param("providedJobUuid")
-	if err := d.DB.Where(models.ProvidedJob{Uuid: providedJobUuid}).Find(&providedJob).Error; err != nil {
+	if err := d.DB.Where(models.ProvidedJob{Uuid: providedJobUuid}).First(&providedJob).Error; err != nil {
 		errResponse := models.ErrorResponse(jsonResponse, err.Error())
 		ctx.JSON(http.StatusUnprocessableEntity, errResponse)
 		return
