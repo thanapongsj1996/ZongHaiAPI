@@ -175,11 +175,6 @@ type ProvidedJobsResponse struct {
 	IsActive         bool    `json:"isActive"`
 }
 
-type ProvidedJobsResponseWithPaging struct {
-	ProvidedJobsResponse *[]ProvidedJobsResponse `json:"providedJobsResponse"`
-	Paging               *pagingResult           `json:"paging"`
-}
-
 func (d *DriverJob) FindProvidedJobs(ctx *gin.Context) {
 	var jsonResponse models.JSONResponse
 	var providedJobs []models.ProvidedJob
@@ -188,16 +183,11 @@ func (d *DriverJob) FindProvidedJobs(ctx *gin.Context) {
 	pagination := pagination{ctx: ctx, query: query, records: &providedJobs}
 	paging := pagination.paginate()
 
-	var j []ProvidedJobsResponse
-	copier.Copy(&j, providedJobs)
-
-	var serializedResponse ProvidedJobsResponseWithPaging
-	copier.Copy(&serializedResponse, ProvidedJobsResponseWithPaging{ProvidedJobsResponse: &j, Paging: paging})
-
-	//var serializedResponse []ProvidedJobsResponse
-	//copier.Copy(&serializedResponse, &providedJobs)
+	var serializedResponse []ProvidedJobsResponse
+	copier.Copy(&serializedResponse, &providedJobs)
 
 	jsonResponse.Data = serializedResponse
+	jsonResponse.AddPaging(paging)
 	response := models.SuccessResponse(jsonResponse)
 	ctx.JSON(http.StatusOK, response)
 }

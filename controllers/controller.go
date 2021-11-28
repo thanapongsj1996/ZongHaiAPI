@@ -4,6 +4,7 @@ import (
 	"gorm.io/gorm"
 	"math"
 	"strconv"
+	"zonghai-api/models"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,16 +15,7 @@ type pagination struct {
 	records interface{}
 }
 
-type pagingResult struct {
-	Page      int   `json:"page"`
-	Limit     int   `json:"limit"`
-	PrevPage  int   `json:"prevPage"`
-	NextPage  int   `json:"nextPage"`
-	Count     int64 `json:"count"`
-	TotalPage int   `json:"totalPage"`
-}
-
-func (p *pagination) paginate() *pagingResult {
+func (p *pagination) paginate() *models.PagingResult {
 	// 1. Get limit, page
 	page, _ := strconv.Atoi(p.ctx.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(p.ctx.DefaultQuery("limit", "12"))
@@ -56,7 +48,7 @@ func (p *pagination) paginate() *pagingResult {
 	}
 
 	// 6. Create pagingResult
-	result := pagingResult{
+	result := models.PagingResult{
 		Page:      page,
 		Limit:     limit,
 		Count:     count,
